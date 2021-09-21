@@ -1,0 +1,10 @@
+[Unit]
+Description=Salto auto encoder
+
+[Service]
+Type=simple
+User=pi
+ExecStart=/bin/bash /usr/bin/encodeSalto.sh
+
+[Install]
+WantedBy=multi-user.target
