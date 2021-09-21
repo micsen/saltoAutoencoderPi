@@ -1,5 +1,5 @@
 #!/bin/bash
-# Declare infinite loop
+#Initial beeps!
 gpio mode 4 out
 for i in {1..5}
 do
@@ -8,12 +8,15 @@ do
    gpio write 4 off
    sleep 0.02
 done
+
+# Declare infinite loop
 for (( ; ; ))
 do
-  #Undo
-  #RES=$(nfc-mfclassic w b blank.bin salto.bin f 2>&1)
-  #Write
-  RES=$(nfc-mfclassic w a /home/pi/dumps/salto.bin /home/pi/dumps/blank.bin f)
+  KEYFILE="home/pi/dumps/blank.bin"
+  DUMPFILE="/home/pi/dumps/salto.bin"
+  #2>&1 is to get the result on failures like reader not connected
+  RES=$(nfc-mfclassic w a $DUMPFILE $KEYFILE f 2>&1)
+  #IF we get 63 of 64 blocks written we are good
   if echo $RES | grep -q 'Done, 63 of 64 blocks written.'; then
     echo "Brikke ferdig"
     gpio write 4 on && sleep 0.1 && gpio write 4 off
@@ -28,6 +31,5 @@ do
     sleep 5
     gpio write 4 on && sleep 0.1 && gpio write 4 off	
   fi
-  #echo "Hey " $RES
 done
 
