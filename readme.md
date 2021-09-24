@@ -8,6 +8,10 @@ uses libnfc
 First install wiringpi and libnfc
 
 ```
+sudo apt install libnfc5 libnfc-bin libnfc-examples
+```
+
+```
 sudo cp encodeSalto.service /lib/systemd/system/
 sudo cp encodeSalto.sh /usr/bin/
 sudo systemctl daemon-reload
