@@ -8,7 +8,7 @@ uses libnfc
 First install wiringpi and libnfc
 
 ```
-sudo apt install libnfc5 libnfc-bin libnfc-examples
+sudo apt install libnfc5 libnfc-bin libnfc-examples wiringpi
 ```
 
 ```

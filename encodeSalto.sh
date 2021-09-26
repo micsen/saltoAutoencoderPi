@@ -1,5 +1,8 @@
 #!/bin/bash
 #Initial beeps!
+beepEn=true
+#If a socket hook topic is present we will publish uid and status at the socket hook topic.
+SOCKETHOOKTOPIC=demo
 gpio mode 4 out
 for i in {1..5}
 do
@@ -19,17 +22,37 @@ do
   #IF we get 63 of 64 blocks written we are good
   if echo $RES | grep -q 'Done, 63 of 64 blocks written.'; then
     echo "Brikke ferdig"
-    gpio write 4 on && sleep 0.1 && gpio write 4 off
+    statusOk
     sleep 1
   elif echo $RES | grep -q 'Error: authentication failed'; then
     echo "Auth failure, Er brikken allered programert"
-    gpio write 4 on && sleep 0.1 && gpio write 4 off && sleep 0.2 && gpio write 4 on && sleep 0.4 && gpio write 4 off
+    statusFault
   elif echo $RES | grep -q 'ERROR: Error opening NFC reader'; then
     #Reader failure
-    gpio write 4 on && sleep 0.1 && gpio write 4 off && sleep 0.2 && gpio write 4 on && sleep 0.4 && gpio write 4 off && sleep 0.5
+    statusFault
+    sleep 0.5
     gpio write 4 on && sleep 0.1 && gpio write 4 off && sleep 0.2 && gpio write 4 on && sleep 0.4 && gpio write 4 off
     sleep 5
     gpio write 4 on && sleep 0.1 && gpio write 4 off	
   fi
 done
 
+
+statusOk () {
+  if [[ "$SOCKETHOOKTOPIC" ]] ; then 
+    curl -d "{\"status\": \"ok\"}" -H "Content-Type: application/json" -X POST https://sockethook.ericbetts.dev/hook/$SOCKETHOOKTOPIC
+  fi
+  if [[ "$beepEn" == true ]] ; then
+    gpio write 4 on && sleep 0.1 && gpio write 4 off
+  fi
+}
+
+statusFault () {
+  if [[ "$SOCKETHOOKTOPIC" ]] ; then 
+    curl -d "{\"status\": \"fault\", \"output\": \"$RES\"}" -H "Content-Type: application/json" -X POST https://sockethook.ericbetts.dev/hook/$SOCKETHOOKTOPIC
+  fi
+  if [[ "$beepEn" == true ]] ; then
+    gpio write 4 on && sleep 0.1 && gpio write 4 off && sleep 0.2 && gpio write 4 on && sleep 0.4 && gpio write 4 off
+  fi
+
+}
