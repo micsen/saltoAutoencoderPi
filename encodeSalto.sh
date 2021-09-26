@@ -39,6 +39,10 @@ do
     #Reader failure
     statusFault
     sleep 5
+  elif echo $RES | grep -q 'Could not open keys file'; then
+    ERROR = "Could not open key file, Check path or permissions"
+    statusFault
+    sleep 15
   elif echo $RES | grep -q 'ERROR:'; then
     echo "Unknown error"
     echo $RES
