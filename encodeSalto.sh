@@ -31,16 +31,16 @@ do
     sleep 1
   elif echo $RES | grep -q 'Error: authentication failed'; then
     echo "Auth failure, Er brikken allered programert"
-    ERROR = "Could not auth, The tag might have been personalized allready or have non default keys."
+    ERROR="Could not auth, The tag might have been personalized allready or have non default keys."
     statusFault
   elif echo $RES | grep -q 'ERROR: Error opening NFC reader'; then
     echo $RES
-    ERROR = "Could not open nfc reader"
+    ERROR="Could not open nfc reader"
     #Reader failure
     statusFault
     sleep 5
   elif echo $RES | grep -q 'Could not open keys file'; then
-    ERROR = "Could not open key file, Check path or permissions"
+    ERROR="Could not open key file, Check path or permissions"
     statusFault
     sleep 15
   elif echo $RES | grep -q 'ERROR:'; then
