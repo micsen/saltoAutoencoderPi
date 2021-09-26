@@ -3,6 +3,10 @@
 beepEn=false
 #If a socket hook topic is present we will publish uid and status at the socket hook topic.
 SOCKETHOOKTOPIC=demo
+if [[ "$SOCKETHOOKTOPIC" ]] ; then 
+echo "Startup sending to socket hook"
+  curl -d "{\"status\": \"startup\"}" -H "Content-Type: application/json" -X POST https://sockethook.ericbetts.dev/hook/$SOCKETHOOKTOPIC
+fi
 if [[ "$beepEn" == true ]] ; then
   gpio mode 4 out
   for i in {1..5}
