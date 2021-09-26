@@ -30,12 +30,12 @@ do
   RES=$(nfc-mfclassic w A $DUMPFILE $KEYFILE f 2>&1)
   #IF we get 63 of 64 blocks written we are good
   if echo $RES | grep -q 'Done, .* of .* blocks written.'; then
-    UID=echo $RES | grep -q 'UID' | tr -d ' ' | awk '{split($0,a,":"); print a[2]}'
+    TAGUID=echo $RES | grep -q 'UID' | tr -d ' ' | awk '{split($0,a,":"); print a[2]}'
     echo "Brikke ferdig"
     statusOk
     sleep 1
   elif echo $RES | grep -q 'Error: authentication failed'; then
-    UID=echo $RES | grep -q 'UID' | tr -d ' ' | awk '{split($0,a,":"); print a[2]}'
+    TAGUID=echo $RES | grep -q 'UID' | tr -d ' ' | awk '{split($0,a,":"); print a[2]}'
     echo "Auth failure, Er brikken allered programert"
     ERROR="Could not auth, The tag might have been personalized allready or have non default keys."
     statusFault
@@ -59,8 +59,8 @@ done
 
 statusOk () {
   if [[ "$SOCKETHOOKTOPIC" ]] ; then 
-    curl -d "{\"status\": \"ok\", , \"uid\": \"$UID\"}" -H "Content-Type: application/json" -X POST https://sockethook.ericbetts.dev/hook/$SOCKETHOOKTOPIC
-    UID=
+    curl -d "{\"status\": \"ok\", , \"uid\": \"$TAGUID\"}" -H "Content-Type: application/json" -X POST https://sockethook.ericbetts.dev/hook/$SOCKETHOOKTOPIC
+    TAGUID=
   fi
   if [[ "$beepEn" == true ]] ; then
     gpio write 4 on && sleep 0.1 && gpio write 4 off
@@ -69,9 +69,9 @@ statusOk () {
 
 statusFault () {
   if [[ "$SOCKETHOOKTOPIC" ]] ; then 
-    curl -d "{\"status\": \"fault\", \"output\": \"$ERROR\", \"uid\": \"$UID\"}" -H "Content-Type: application/json" -X POST https://sockethook.ericbetts.dev/hook/$SOCKETHOOKTOPIC
+    curl -d "{\"status\": \"fault\", \"output\": \"$ERROR\", \"uid\": \"$TAGUID\"}" -H "Content-Type: application/json" -X POST https://sockethook.ericbetts.dev/hook/$SOCKETHOOKTOPIC
     ERROR=
-    UID=
+    TAGUID=
   fi
   if [[ "$beepEn" == true ]] ; then
     gpio write 4 on && sleep 0.1 && gpio write 4 off && sleep 0.2 && gpio write 4 on && sleep 0.4 && gpio write 4 off
