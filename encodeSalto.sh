@@ -31,14 +31,20 @@ do
     sleep 1
   elif echo $RES | grep -q 'Error: authentication failed'; then
     echo "Auth failure, Er brikken allered programert"
+    ERROR = "Could not auth, The tag might have been personalized allready or have non default keys."
     statusFault
   elif echo $RES | grep -q 'ERROR: Error opening NFC reader'; then
+    echo $RES
+    ERROR = "Could not open nfc reader"
     #Reader failure
     statusFault
     sleep 0.5
     gpio write 4 on && sleep 0.1 && gpio write 4 off && sleep 0.2 && gpio write 4 on && sleep 0.4 && gpio write 4 off
     sleep 5
-    gpio write 4 on && sleep 0.1 && gpio write 4 off	
+    gpio write 4 on && sleep 0.1 && gpio write 4 off
+  elif echo $RES | grep -q 'ERROR:'; then
+    echo "Unknown error"
+    echo $RES
   fi
 done
 
@@ -54,7 +60,8 @@ statusOk () {
 
 statusFault () {
   if [[ "$SOCKETHOOKTOPIC" ]] ; then 
-    curl -d "{\"status\": \"fault\", \"output\": \"$RES\"}" -H "Content-Type: application/json" -X POST https://sockethook.ericbetts.dev/hook/$SOCKETHOOKTOPIC
+    curl -d "{\"status\": \"fault\", \"output\": \"$ERROR\"}" -H "Content-Type: application/json" -X POST https://sockethook.ericbetts.dev/hook/$SOCKETHOOKTOPIC
+    ERROR=
   fi
   if [[ "$beepEn" == true ]] ; then
     gpio write 4 on && sleep 0.1 && gpio write 4 off && sleep 0.2 && gpio write 4 on && sleep 0.4 && gpio write 4 off
