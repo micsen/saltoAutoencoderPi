@@ -31,11 +31,13 @@ do
   #IF we get 63 of 64 blocks written we are good
   if echo $RES | grep -q 'Done, .* of .* blocks written.'; then
     TAGUID=echo $RES | grep -q 'UID' | tr -d ' ' | awk '{split($0,a,":"); print a[2]}'
+    echo $TAGUID
     echo "Brikke ferdig"
     statusOk
     sleep 1
   elif echo $RES | grep -q 'Error: authentication failed'; then
     TAGUID=echo $RES | grep -q 'UID' | tr -d ' ' | awk '{split($0,a,":"); print a[2]}'
+    echo $TAGUID
     echo "Auth failure, Er brikken allered programert"
     ERROR="Could not auth, The tag might have been personalized allready or have non default keys."
     statusFault
