@@ -19,27 +19,7 @@ if [[ "$beepEn" == true ]] ; then
 fi
 
 
-statusOk () {
-  if [[ "$SOCKETHOOKTOPIC" ]] ; then 
-    curl -d "{\"status\": \"ok\"}" -H "Content-Type: application/json" -X POST https://sockethook.ericbetts.dev/hook/$SOCKETHOOKTOPIC
-  fi
-  if [[ "$beepEn" == true ]] ; then
-    gpio write 4 on && sleep 0.1 && gpio write 4 off
-  fi
-}
-
-statusFault () {
-  if [[ "$SOCKETHOOKTOPIC" ]] ; then 
-    curl -d "{\"status\": \"fault\", \"output\": \"$ERROR\"}" -H "Content-Type: application/json" -X POST https://sockethook.ericbetts.dev/hook/$SOCKETHOOKTOPIC
-    ERROR=
-  fi
-  if [[ "$beepEn" == true ]] ; then
-    gpio write 4 on && sleep 0.1 && gpio write 4 off && sleep 0.2 && gpio write 4 on && sleep 0.4 && gpio write 4 off
-  fi
-
-}
-
-
+start () {
 # Declare infinite loop
 for (( ; ; ))
 do
@@ -72,5 +52,26 @@ do
   fi
   echo $RES
 done
+}
 
+statusOk () {
+  if [[ "$SOCKETHOOKTOPIC" ]] ; then 
+    curl -d "{\"status\": \"ok\"}" -H "Content-Type: application/json" -X POST https://sockethook.ericbetts.dev/hook/$SOCKETHOOKTOPIC
+  fi
+  if [[ "$beepEn" == true ]] ; then
+    gpio write 4 on && sleep 0.1 && gpio write 4 off
+  fi
+}
 
+statusFault () {
+  if [[ "$SOCKETHOOKTOPIC" ]] ; then 
+    curl -d "{\"status\": \"fault\", \"output\": \"$ERROR\"}" -H "Content-Type: application/json" -X POST https://sockethook.ericbetts.dev/hook/$SOCKETHOOKTOPIC
+    ERROR=
+  fi
+  if [[ "$beepEn" == true ]] ; then
+    gpio write 4 on && sleep 0.1 && gpio write 4 off && sleep 0.2 && gpio write 4 on && sleep 0.4 && gpio write 4 off
+  fi
+
+}
+
+start
