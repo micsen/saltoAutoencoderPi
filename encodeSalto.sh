@@ -2,9 +2,8 @@
 #Initial beeps!
 beepEn=false
 #If a socket hook topic is present we will publish uid and status at the socket hook topic.
-SOCKETHOOKTOPIC=demo
+SOCKETHOOKTOPIC=$(cat /etc/hostname/)
 if [[ "$SOCKETHOOKTOPIC" ]] ; then 
-echo "Startup sending to socket hook"
   curl -d "{\"status\": \"startup\"}" -H "Content-Type: application/json" -X POST https://sockethook.ericbetts.dev/hook/$SOCKETHOOKTOPIC
 fi
 if [[ "$beepEn" == true ]] ; then
