@@ -3,6 +3,10 @@
 beepEn=false
 #If a socket hook topic is present we will publish uid and status at the socket hook topic.
 SOCKETHOOKTOPIC=$(cat /etc/hostname/)
+#Keyfile and dump file locations
+KEYFILE="/etc/dumps/blank.bin"
+DUMPFILE="/etc/dumps/salto.bin"
+
 if [[ "$SOCKETHOOKTOPIC" ]] ; then 
   curl -d "{\"status\": \"startup\"}" -H "Content-Type: application/json" -X POST https://sockethook.ericbetts.dev/hook/$SOCKETHOOKTOPIC
 fi
@@ -22,8 +26,6 @@ start () {
 # Declare infinite loop
 for (( ; ; ))
 do
-  KEYFILE="./dumps/blank.bin"
-  DUMPFILE="./dumps/salto.bin"
   #2>&1 is to get the result on failures like reader not connected
   RES=$(nfc-mfclassic w a $DUMPFILE $KEYFILE f 2>&1)
   #IF we get 63 of 64 blocks written we are good
