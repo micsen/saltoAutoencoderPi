@@ -1,17 +1,18 @@
 #!/bin/bash
 #Initial beeps!
-beepEn=true
+beepEn=false
 #If a socket hook topic is present we will publish uid and status at the socket hook topic.
 SOCKETHOOKTOPIC=demo
-gpio mode 4 out
-for i in {1..5}
-do
-   gpio write 4 on
-   sleep 0.02
-   gpio write 4 off
-   sleep 0.02
-done
-
+if [[ "$beepEn" == true ]] ; then
+  gpio mode 4 out
+  for i in {1..5}
+  do
+    gpio write 4 on
+    sleep 0.02
+    gpio write 4 off
+    sleep 0.02
+  done
+fi
 # Declare infinite loop
 for (( ; ; ))
 do
