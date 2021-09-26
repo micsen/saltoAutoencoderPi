@@ -2,7 +2,7 @@
 #Initial beeps!
 beepEn=false
 #If a socket hook topic is present we will publish uid and status at the socket hook topic.
-SOCKETHOOKTOPIC=$(cat /etc/hostname)
+SOCKETHOOKTOPIC=$(cat /etc/hostname | tr -d '\n')
 #Keyfile and dump file locations
 KEYFILE="/etc/dumps/blank.bin"
 DUMPFILE="/etc/dumps/salto.bin"
