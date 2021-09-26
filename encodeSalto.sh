@@ -20,8 +20,8 @@ fi
 # Declare infinite loop
 for (( ; ; ))
 do
-  KEYFILE="home/pi/dumps/blank.bin"
-  DUMPFILE="/home/pi/dumps/salto.bin"
+  KEYFILE="./dumps/blank.bin"
+  DUMPFILE="./dumps/salto.bin"
   #2>&1 is to get the result on failures like reader not connected
   RES=$(nfc-mfclassic w a $DUMPFILE $KEYFILE f 2>&1)
   #IF we get 63 of 64 blocks written we are good
