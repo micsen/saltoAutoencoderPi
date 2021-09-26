@@ -38,14 +38,12 @@ do
     ERROR = "Could not open nfc reader"
     #Reader failure
     statusFault
-    sleep 0.5
-    gpio write 4 on && sleep 0.1 && gpio write 4 off && sleep 0.2 && gpio write 4 on && sleep 0.4 && gpio write 4 off
     sleep 5
-    gpio write 4 on && sleep 0.1 && gpio write 4 off
   elif echo $RES | grep -q 'ERROR:'; then
     echo "Unknown error"
     echo $RES
   fi
+  echo $RES
 done
 
 
