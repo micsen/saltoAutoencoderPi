@@ -29,7 +29,7 @@ do
   #2>&1 is to get the result on failures like reader not connected
   RES=$(nfc-mfclassic w A $DUMPFILE $KEYFILE f 2>&1)
   #IF we get 63 of 64 blocks written we are good
-  if echo $RES | grep -q 'Done, 63 of 64 blocks written.'; then
+  if echo $RES | grep -q 'Done, .* of .* blocks written.'; then
     echo "Brikke ferdig"
     statusOk
     sleep 1
