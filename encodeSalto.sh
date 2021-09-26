@@ -61,7 +61,7 @@ done
 
 statusOk () {
   if [[ "$SOCKETHOOKTOPIC" ]] ; then 
-    curl -d "{\"status\": \"ok\", , \"uid\": \"$TAGUID\"}" -H "Content-Type: application/json" -X POST https://sockethook.ericbetts.dev/hook/$SOCKETHOOKTOPIC
+    curl -d "{\"status\": \"ok\", \"uid\": \"$TAGUID\"}" -H "Content-Type: application/json" -X POST https://sockethook.ericbetts.dev/hook/$SOCKETHOOKTOPIC
     TAGUID=
   fi
   if [[ "$beepEn" == true ]] ; then
